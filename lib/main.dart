@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github/github.dart';
 import 'package:macos_demo/credentials.dart';
 import 'package:macos_demo/github_login_widget.dart';
 import 'package:window_to_front/window_to_front.dart';
@@ -36,17 +37,41 @@ class MyHomePage extends StatelessWidget {
       githubScopes: githubScopes,
       builder: (context, client) {
         WindowToFront.activate();
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-          ),
-          body: const Center(
-            child: Text(
-              'You are logged in to GitHub!',
-            ),
-          ),
+        return FutureBuilder<CurrentUser>(
+          future: _getUser(client.credentials.accessToken),
+          builder: (context, user) {
+            if (!user.hasData) {
+              return const SizedBox();
+            }
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(title),
+              ),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'You are logged in as ${user.data?.name ?? ''} ',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    height: 150,
+                    width: 1540,
+                    child: Image.network(user.data?.avatarUrl ?? ''),
+                  )
+                ],
+              ),
+            );
+          },
         );
       },
     );
+  }
+
+  Future<CurrentUser> _getUser(String token) async {
+    var gitHub = GitHub(auth: Authentication.withToken(token));
+    return gitHub.users.getCurrentUser();
   }
 }
