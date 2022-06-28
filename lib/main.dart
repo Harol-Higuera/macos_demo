@@ -56,11 +56,12 @@ class MyHomePage extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  SizedBox(
-                    height: 150,
-                    width: 1540,
-                    child: Image.network(user.data?.avatarUrl ?? ''),
-                  )
+                  if (user.data?.avatarUrl != null)
+                    SizedBox(
+                      height: 150,
+                      width: 1540,
+                      child: Image.network(user.data?.avatarUrl ?? ''),
+                    )
                 ],
               ),
             );
