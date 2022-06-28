@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:macos_demo/credentials.dart';
 import 'package:macos_demo/github_login_widget.dart';
+import 'package:window_to_front/window_to_front.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,6 +35,7 @@ class MyHomePage extends StatelessWidget {
       githubClientSecret: githubSecret,
       githubScopes: githubScopes,
       builder: (context, client) {
+        WindowToFront.activate();
         return Scaffold(
           appBar: AppBar(
             title: Text(title),
